@@ -1,8 +1,11 @@
 package cn.colining.model;
 
+import org.springframework.context.annotation.Bean;
+
 /**
  * Created by colin on 2017/6/24.
  */
+
 public class User {
     private String name;
 

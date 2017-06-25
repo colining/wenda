@@ -20,6 +20,11 @@ import java.util.Date;
 @Component
 public class LogAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogAspect.class);
+
+    /**
+     * 打印连接点的一大堆信息，before在方法调用前执行
+     * @param joinPoint 连接点
+     */
     @Before("execution(* cn.colining.controller.*Controller.*(..))")
     public void beforeMethod(JoinPoint joinPoint) {
         StringBuilder stringBuilder = new StringBuilder();
