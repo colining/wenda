@@ -35,12 +35,12 @@ public class IndexController {
      *
      * @return 返回结果直接写入response body
      */
-    @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.POST, RequestMethod.GET})
-    @ResponseBody
-    public String index(HttpSession httpSession) {
-        LOGGER.info("visit" + new Date());
-        return "Hello World" + httpSession.getAttribute("msg");
-    }
+//    @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.POST, RequestMethod.GET})
+//    @ResponseBody
+//    public String index(HttpSession httpSession) {
+//        LOGGER.info("visit" + new Date());
+//        return "Hello World" + httpSession.getAttribute("msg");
+//    }
 
     /**
      * PathVariable    是指从路径得到的参数 <br>

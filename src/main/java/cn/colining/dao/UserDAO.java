@@ -1,13 +1,16 @@
 package cn.colining.dao;
 
 import cn.colining.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
+
+import org.apache.ibatis.annotations.*;
+
+import org.springframework.stereotype.Component;
 
 /**
  * Created by colin on 2017/6/28.
  */
 @Mapper
+@Component
 public interface UserDAO {
     // 注意空格
     String TABLE_NAME = " user ";
@@ -17,4 +20,15 @@ public interface UserDAO {
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
             ") values (#{name},#{password},#{salt},#{headUrl})"})
     int addUser(User user);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where id = #{id}"})
+    User selectById(int id);
+
+    @Update({"update ", TABLE_NAME, " set password = #{password} where id = #{id}"})
+    void updatePassword(User user);
+
+    @Delete({"delete from ", TABLE_NAME, " where id = #{id}"})
+    void deleteById(int id);
+
 }
+

@@ -22,7 +22,7 @@ Hello!
     <#assign title= 5>
     ${title}
     <#--在本页面加入其他页面-->
-    <#include "header.ftl">
+    <#include "myheader.ftl">
 
     <#--定义宏，colortest是宏的名字，color和index是参数-->
     <#macro colortest color index>
