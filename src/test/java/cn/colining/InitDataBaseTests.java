@@ -46,8 +46,8 @@ public class InitDataBaseTests {
             date.setTime(date.getTime() + 1000 * 3600 * i);
             question.setCreateDate(date);
             question.setUserId(i + 1);
-            question.setTitle(String.format("TITLE %d",i));
-            question.setContent(String.format("Balalalala Content %d",i));
+            question.setTitle(String.format("TITLE %d", i));
+            question.setContent(String.format("Balalalala Content %d", i));
 
             questionDAO.addQuestion(question);
         }
@@ -62,4 +62,8 @@ public class InitDataBaseTests {
         System.out.println(questionDAO.selectLatestQuestions(0, 0, 10));
     }
 
+    @Test
+    public void test3() {
+        Assert.assertNotNull(userDAO.selectByName("123"));
+    }
 }

@@ -23,7 +23,7 @@ import java.util.*;
 @Controller
 public class IndexController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
     @Autowired
     WendaService wendaService;              //自动装配

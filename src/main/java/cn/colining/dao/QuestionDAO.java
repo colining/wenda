@@ -20,7 +20,7 @@ public interface QuestionDAO {
     /**
      * 通过mybatis 的注解书写的DAO，减少了许多代码<br>
      * 一定要注意string之间的空格，通过#{}的方式可以直接取得对象中的属性<br>
-     * 一定要注意#{}内是字段名字
+     * 一定要注意#{}内是类中字段名字,
      * @param question 问题对象
      * @return  int
      */

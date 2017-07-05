@@ -1,6 +1,7 @@
 package cn.colining.controller;
 
 import cn.colining.aspect.LogAspect;
+import cn.colining.model.HostHolder;
 import cn.colining.model.Question;
 import cn.colining.model.ViewObject;
 import cn.colining.service.QuestionService;
@@ -30,6 +31,9 @@ public class HomeController {
     @Autowired
     QuestionService questionService;
 
+    @Autowired
+    HostHolder hostHolder;
+
     /**
      * 通过model 将vos 传递给页面，进行首页展示
      * @param model model
@@ -39,6 +43,7 @@ public class HomeController {
     public String index(Model model) {
         List<ViewObject> vos = getViewObjects(0,0,10);
         model.addAttribute("vos", vos);
+        hostHolder.getUser();
         return "index";
     }
 
