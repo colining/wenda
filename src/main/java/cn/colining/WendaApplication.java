@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan("cn.colining.dao")
 public class WendaApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WendaApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WendaApplication.class, args);
+    }
 }

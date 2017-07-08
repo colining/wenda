@@ -1,7 +1,6 @@
 package cn.colining.aspect;
 
 
-import com.sun.org.apache.xpath.internal.Arg;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,20 +22,22 @@ public class LogAspect {
 
     /**
      * 打印连接点的一大堆信息，before在方法调用前执行
+     *
      * @param joinPoint 连接点
      */
     @Before("execution(* cn.colining.controller.*Controller.*(..))")
     public void beforeMethod(JoinPoint joinPoint) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Object o : joinPoint.getArgs() ) {
+        for (Object o : joinPoint.getArgs()) {
             stringBuilder.append("arg: " + o.toString() + "|");
         }
-        LOGGER.info("before method "+stringBuilder.toString());
+        LOGGER.info("before method " + stringBuilder.toString());
 
     }
-    @After("execution(* cn.colining.controller.IndexController.*(..))")
-    public void  afterMethod(){
-        LOGGER.info("after method"+new Date());
+
+    @After("execution(* cn.colining.controller.MyIndexController.*(..))")
+    public void afterMethod() {
+        LOGGER.info("after method" + new Date());
 
     }
 }

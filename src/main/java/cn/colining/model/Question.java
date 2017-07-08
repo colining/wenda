@@ -2,7 +2,6 @@ package cn.colining.model;
 
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by colin on 2017/6/29.

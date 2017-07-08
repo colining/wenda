@@ -1,8 +1,9 @@
 package cn.colining.dao;
 
 import cn.colining.model.Question;
-import cn.colining.model.User;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,8 +22,9 @@ public interface QuestionDAO {
      * 通过mybatis 的注解书写的DAO，减少了许多代码<br>
      * 一定要注意string之间的空格，通过#{}的方式可以直接取得对象中的属性<br>
      * 一定要注意#{}内是类中字段名字,
+     *
      * @param question 问题对象
-     * @return  int
+     * @return int
      */
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
             ") values (#{title},#{content},#{createdDate},#{userId},#{commentCount})"})
@@ -31,9 +33,10 @@ public interface QuestionDAO {
     /**
      * 这个不是通过注解的方式，而是通过xml来实现的<br>
      * Param注解 表示需要传过去的参数，真正的sql语句在xml中定义
-     * @param userId    用户Id
-     * @param offset    开始位置
-     * @param limit     限制
+     *
+     * @param userId 用户Id
+     * @param offset 开始位置
+     * @param limit  限制
      * @return
      */
     List<Question> selectLatestQuestions(@Param("userId") int userId, @Param("offset") int offset,

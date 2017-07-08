@@ -20,7 +20,7 @@ import java.util.Date;
  * Created by colin on 2017/7/5.
  */
 @Component
-public class PassportInterceptor implements HandlerInterceptor{
+public class PassportInterceptor implements HandlerInterceptor {
     @Autowired
     LoginTicketDao loginTicketDao;
 
@@ -29,6 +29,7 @@ public class PassportInterceptor implements HandlerInterceptor{
 
     @Autowired
     HostHolder hostHolder;
+    //拦截器是针对request的，有多少次request，就经历多少次拦截器
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String ticket = null;
@@ -42,7 +43,7 @@ public class PassportInterceptor implements HandlerInterceptor{
         }
         if (ticket != null) {
             LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
-            if (loginTicket == null || loginTicket.getExpired().before(new Date())||loginTicket.getStatus()!=0) {
+            if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0) {
                 return true;
             }
             User user = userDAO.selectById(loginTicket.getUserId());

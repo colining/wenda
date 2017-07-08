@@ -1,11 +1,11 @@
 package cn.colining.configuration;
 
-import cn.colining.interceptor.LoginRequredInterceptor;
+import cn.colining.interceptor.CheckNextInterceptor;
+import cn.colining.interceptor.LoginRequiredInterceptor;
 import cn.colining.interceptor.PassportInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 
@@ -19,12 +19,19 @@ public class WendaWebConfiguration extends WebMvcConfigurerAdapter {
     PassportInterceptor passportInterceptor;
 
     @Autowired
-    LoginRequredInterceptor loginRequredInterceptor;
+    LoginRequiredInterceptor loginRequiredInterceptor;
 
+    @Autowired
+    CheckNextInterceptor checkNextInterceptor;
+    /**
+     * 添加拦截器，拦截器会按照顺序执行
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(passportInterceptor);
-        registry.addInterceptor(loginRequredInterceptor).addPathPatterns("/user/*");
+        registry.addInterceptor(checkNextInterceptor);
+        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/user/*");
         super.addInterceptors(registry);
     }
 }

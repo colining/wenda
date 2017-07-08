@@ -1,7 +1,6 @@
 package cn.colining.dao;
 
 import cn.colining.model.LoginTicket;
-import cn.colining.model.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 

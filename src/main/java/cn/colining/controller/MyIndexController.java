@@ -1,6 +1,5 @@
 package cn.colining.controller;
 
-import cn.colining.aspect.LogAspect;
 import cn.colining.model.User;
 import cn.colining.service.WendaService;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,9 +21,9 @@ import java.util.*;
  * Created by colin on 2017/6/24.
  */
 @Controller
-public class IndexController {
+public class MyIndexController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyIndexController.class);
 
     @Autowired
     WendaService wendaService;              //自动装配
@@ -64,6 +64,7 @@ public class IndexController {
 
     /**
      * 通过model可以将后台的参数传向页面
+     *
      * @param model model
      * @return 页面
      */

@@ -3,7 +3,6 @@ package cn.colining.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by colin on 2017/6/29.
