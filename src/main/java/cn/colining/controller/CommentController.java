@@ -41,6 +41,8 @@ public class CommentController {
     @Autowired
     SensitiveService sensitiveService;
 
+
+
     @RequestMapping(path = {"/addComment"}, method = {RequestMethod.POST})
     public String addComment(@RequestParam("questionId") int questionId,
                              @RequestParam("content") String content) {
@@ -62,7 +64,8 @@ public class CommentController {
 
             commentService.addComment(comment);
 
-
+            int count = commentService.getCommentCount(comment.getEntityId(), comment.getEntityType());
+            questionService.updateCommentCount(comment.getEntityId(), count);
         } catch (Exception e) {
             logger.error("增加评论失败" + e.getMessage());
         }

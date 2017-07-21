@@ -125,4 +125,8 @@ public class UserService {
             System.out.println(UUID.randomUUID().toString());
         }
     }
+
+    public User selectByName(String name) {
+        return userDAO.selectByName(name);
+    }
 }

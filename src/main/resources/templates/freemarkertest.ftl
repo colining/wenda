@@ -45,6 +45,9 @@ Hello!
     <#assign helloWorld2 = '${hello}2 world'>
     ${helloWorld1}
     ${helloWorld2}
+
+    <#--日期展示-->
+    ${comment.comment.createdDate?string("yyyy-MM-dd HH:mm")}
 </pre>
 </body>
 </html>

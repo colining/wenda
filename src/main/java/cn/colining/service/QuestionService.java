@@ -2,6 +2,8 @@ package cn.colining.service;
 
 import cn.colining.dao.QuestionDAO;
 import cn.colining.model.Question;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -38,6 +40,10 @@ public class QuestionService {
 
     public Question selectById(int i) {
         return questionDAO.selectById(i);
+    }
+
+    public int updateCommentCount(int entityId, int count) {
+        return questionDAO.updateCommentCount(entityId, count);
     }
 
 
