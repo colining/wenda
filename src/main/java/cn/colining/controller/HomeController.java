@@ -1,6 +1,5 @@
 package cn.colining.controller;
 
-import cn.colining.aspect.LogAspect;
 import cn.colining.model.HostHolder;
 import cn.colining.model.Question;
 import cn.colining.model.ViewObject;
@@ -23,7 +22,7 @@ import java.util.List;
  */
 @Controller
 public class HomeController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     UserService userService;

@@ -1,4 +1,4 @@
-#parse("header.html")
+<#include "header.ftl">
 <link rel="stylesheet" href="../styles/detail.css">
 <div class="zg-wrap zu-main clearfix with-indention-votebar" itemscope="" itemtype="http://schema.org/Question"
      id="zh-single-question-page" data-urltoken="36301524" role="main">
@@ -124,6 +124,7 @@
                     </div>
                 </div>
                 </#list>
+
             </div>
             <a name="draft"></a>
             <form action="/addComment" method="post" id="commentform">
@@ -147,4 +148,4 @@
         </div>
     </div>
 </div>
-#parse("footer.html")
+<#include "footer.ftl">

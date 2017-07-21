@@ -1,7 +1,7 @@
 package cn.colining.controller;
 
-import cn.colining.model.HostHolder;
-import cn.colining.model.Question;
+import cn.colining.model.*;
+import cn.colining.service.CommentService;
 import cn.colining.service.QuestionService;
 import cn.colining.service.UserService;
 import cn.colining.util.WendaUtil;
@@ -12,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by colin on 2017/7/12.
@@ -26,8 +28,12 @@ public class QuestionController {
 
     @Autowired
     HostHolder hostHolder;
+
     @Autowired
     UserService userService;
+
+    @Autowired
+    CommentService commentService;
 
 
     /**
@@ -73,7 +79,16 @@ public class QuestionController {
     public String questionDetail(Model model,@PathVariable("qid") int qid) {
         Question question = questionService.selectById(qid);
         model.addAttribute("question", question);
-        model.addAttribute("user", userService.getUser(hostHolder.getUser().getId()));
+//        model.addAttribute("user", userService.getUser(hostHolder.getUser().getId()));
+        List<Comment> commentsList = commentService.getCommentByEntity(qid, EntityType.ENTITY_QUESTION);
+        List<ViewObject> comments = new ArrayList<>();
+        for (Comment comment : commentsList) {
+            ViewObject vo = new ViewObject();
+            vo.set("comment", comment);
+            vo.set("user", userService.getUser(comment.getUserId()));
+            comments.add(vo);
+        }
+        model.addAttribute("comments", comments);
         return "detail";
     }
 }
