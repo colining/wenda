@@ -20,7 +20,6 @@ public interface QuestionDAO {
      * 通过mybatis 的注解书写的DAO，减少了许多代码<br>
      * 一定要注意string之间的空格，通过#{}的方式可以直接取得对象中的属性<br>
      * 一定要注意#{}内是类中字段名字,
-     *
      * @param question 问题对象
      * @return int
      */
@@ -39,9 +38,21 @@ public interface QuestionDAO {
      */
     List<Question> selectLatestQuestions(@Param("userId") int userId, @Param("offset") int offset,
                                          @Param("limit") int limit);
+
+    /**
+     * 取出问题
+     * @param id
+     * @return
+     */
     @Select({"select" ,SELECT_FIELDS, " from ",TABLE_NAME,"where id = #{id}"})
     Question selectById(int id);
 
+    /**
+     * 修改评论数，当有人评论时，应该修改评论数量，可以变成异步的，下奶还未实现
+     * @param id
+     * @param commentCount
+     * @return
+     */
     @Update({"update ", TABLE_NAME, " set comment_count = #{commentCount} where id  = #{id}"})
     int updateCommentCount(@Param("id") int id, @Param("commentCount") int commentCount);
 

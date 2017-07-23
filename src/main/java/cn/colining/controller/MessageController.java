@@ -37,9 +37,17 @@ public class MessageController {
     @Autowired
     UserService userService;
 
+    /**
+     * 添加一条私信，
+     * 先判断用户在不在，然后就是添加到数据库了
+     * 需要从页面获取发给谁，内容是谁
+     * @param toName    发送给谁
+     * @param content   内容
+     * @return
+     */
     @RequestMapping(path = {"/msg/addMessage"}, method = {RequestMethod.POST})
     @ResponseBody
-    public String addComment(@RequestParam("toName") String toName,
+    public String addMessage(@RequestParam("toName") String toName,
                              @RequestParam("content") String content) {
         try {
             if (hostHolder.getUser() == null) {
@@ -62,6 +70,12 @@ public class MessageController {
         }
     }
 
+
+    /**
+     * 获取全部私信，传给页面
+     * @param model model
+     * @return
+     */
     @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
     public String getConversationList(Model model) {
         if (hostHolder.getUser() == null) {
@@ -82,6 +96,12 @@ public class MessageController {
         return "letter";
     }
 
+    /**
+     * 获取与某个人的全部往来私信
+     * @param model             model
+     * @param conversationId    私信往来的id
+     * @return
+     */
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
     public String getConversationDetail(Model model, @RequestParam("conversationId") String conversationId) {
         try {

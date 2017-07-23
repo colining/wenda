@@ -81,7 +81,7 @@ public class LoginController {
      * @param model
      * @param username
      * @param password
-     * @param rememberme 是否记住，决定于是否下发cookie
+     * @param rememberMe 是否记住，决定于是否下发cookie
      * @param next       登录后要跳转的页面
      * @param response   通过响应来下发cookie
      * @return
@@ -90,12 +90,12 @@ public class LoginController {
     public String login(Model model,
                         @RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
+                        @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
                         @RequestParam(value = "next", defaultValue = "") String next,
                         HttpServletResponse response) {
         try {
             Map<String, String> map = userService.login(username, password);
-            return checkTicket(model, next, rememberme, response, map);
+            return checkTicket(model, next, rememberMe, response, map);
         } catch (Exception e) {
             logger.error("注册异常" + e.getMessage());
             return "login";
@@ -123,16 +123,16 @@ public class LoginController {
      * 5天，然后进行跳转，如果有next就跳转next
      * @param model
      * @param next
-     * @param rememberme
+     * @param rememberMe
      * @param response
      * @param map
      * @return
      */
-    private String checkTicket(Model model, @RequestParam(value = "next", defaultValue = "") String next, @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme, HttpServletResponse response, Map<String, String> map) {
+    private String checkTicket(Model model, @RequestParam(value = "next", defaultValue = "") String next, @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe, HttpServletResponse response, Map<String, String> map) {
         if (map.containsKey("ticket")) {
             Cookie cookie = new Cookie("ticket", map.get("ticket"));
             cookie.setPath("/");
-            if (rememberme) {
+            if (rememberMe) {
                 cookie.setMaxAge(3600 * 24 * 5);
             }
             response.addCookie(cookie);

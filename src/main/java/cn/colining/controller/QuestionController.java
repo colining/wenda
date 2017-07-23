@@ -41,20 +41,20 @@ public class QuestionController {
      * 如果没登录就会加一个匿名，也可以返回code:999
      * 添加问题不成功的话，就会报错
      * @param title  问题标题
-     * @param contetnt 问题内容
+     * @param content 问题内容
      * @return
      */
     @RequestMapping(value = "/question/add", method = {RequestMethod.POST})
     @ResponseBody
-    public String addQuestion(@RequestParam("title") String title, @RequestParam("content") String contetnt) {
+    public String addQuestion(@RequestParam("title") String title, @RequestParam("content") String content) {
         try {
             Question question = new Question();
             question.setTitle(title);
             question.setCreateDate(new Date());
-            question.setContent(contetnt);
+            question.setContent(content);
             question.setCommentCount(0);
             if (hostHolder.getUser() == null) {
-                question.setUserId(WendaUtil.ANOYNMOUS_USERID);
+                question.setUserId(WendaUtil.ANONYMITY_USERID);
 //                return WendaUtil.getJSONString(999);
             } else {
                 question.setUserId(hostHolder.getUser().getId());
@@ -70,7 +70,9 @@ public class QuestionController {
     }
 
     /**
-     * 问题详情页面
+     * 问题详情页
+     * 新添加了评论的部分
+     * 取出评论集合然后通过viewObject 放进页面中区
      * @param model model
      * @param qid   问题id，用来取出问题
      * @return

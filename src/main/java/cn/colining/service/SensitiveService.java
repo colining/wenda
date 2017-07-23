@@ -1,7 +1,5 @@
 package cn.colining.service;
 
-import cn.colining.controller.MyIndexController;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,13 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by colin on 2017/7/12.
@@ -26,7 +22,7 @@ public class SensitiveService implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(SensitiveService.class);
 
     /**
-     * Service初始化后，即进行读取文件操作
+     * Service初始化后，即进行读取文件操作，然后通过addWord，构造出前缀树
      * @throws Exception
      */
     @Override
@@ -70,7 +66,6 @@ public class SensitiveService implements InitializingBean {
     private class TrieNode {
         //是否为关键词结尾的结点
         private boolean end = false;
-
         //前缀树中的一个结点持有一个map，这个map中就是当前结点的子结点
         private Map<Character, TrieNode> subNodes = new HashMap<Character, TrieNode>();
 
@@ -98,6 +93,7 @@ public class SensitiveService implements InitializingBean {
     //判断是否为故意扰乱敏感词的字符
     private boolean isSymbol(char c) {
         int ic = (int) c;
+        //东亚文字
         return !CharUtils.isAsciiAlphanumeric(c) && (ic < 0x2E80 || ic > 0x9FFF);
     }
 
@@ -111,7 +107,7 @@ public class SensitiveService implements InitializingBean {
             return text;
         }
         StringBuilder result = new StringBuilder();
-        String repalcement = "***";
+        String replaceMent = "***";
         TrieNode tempNode = rootNode;
         //begin一直向后移动，代表当前搜索的敏感词的头结点
         int begin = 0;
@@ -121,6 +117,9 @@ public class SensitiveService implements InitializingBean {
         while (position < text.length()) {
             char c = text.charAt(position);
             if (isSymbol(c)) {
+                //如果还在rootNode，说明还没进前缀树，
+                //这部分奇怪的字符直接加进来就好
+                //否则就跳过，只找那些关键字过滤
                 if (tempNode == rootNode) {
                     result.append(c);
                     begin++;
@@ -136,7 +135,7 @@ public class SensitiveService implements InitializingBean {
                 begin = position;
                 tempNode = rootNode;
             } else if (tempNode.isKeyWordEnd()) {
-                result.append(repalcement);
+                result.append(replaceMent);
                 position = position + 1;
                 begin = position;
                 tempNode = rootNode;
@@ -155,7 +154,7 @@ public class SensitiveService implements InitializingBean {
         SensitiveService s = new SensitiveService();
         s.addWord("色情");
         s.addWord("赌博");
-        System.out.println(s.filter("hi  你好色 情"));
+        System.out.println(s.filter("●●●●●hi  你好●色● ●情●"));
 
     }
 }
