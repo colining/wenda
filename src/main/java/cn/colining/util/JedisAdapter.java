@@ -1,13 +1,25 @@
 package cn.colining.util;
 
+import cn.colining.controller.MessageController;
+import cn.colining.model.User;
+import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Service;
 import redis.clients.jedis.BinaryClient;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
 
 /**
  * Created by colin on 2017/7/27.
  */
-public class JedisAdapter {
+@Service
+public class JedisAdapter implements InitializingBean {
+    private JedisPool jedisPool;
+    private static final Logger logger = LoggerFactory.getLogger(JedisAdapter.class);
+
     public static void print(int index, Object object) {
         System.out.println(String.format("%d,%s", index, object.toString()));
     }
@@ -54,8 +66,8 @@ public class JedisAdapter {
         print(12, jedis.hgetAll(userKey));
         jedis.hdel(userKey, "phone");
         print(14, jedis.hgetAll(userKey));
-        print(15, jedis.exists(userKey, "email"));
-        print(15, jedis.exists(userKey, "age"));
+        print(15, jedis.hexists(userKey, "email"));
+        print(15, jedis.hexists(userKey, "age"));
         print(17, jedis.hkeys(userKey));
         print(18, jedis.hvals(userKey));
         jedis.hsetnx(userKey, "School", "cugb");
@@ -65,14 +77,14 @@ public class JedisAdapter {
 
         String listKey1 = "like1";
         String listKey2 = "like2";
-        for (int i = 0; i <10;i++) {
+        for (int i = 0; i < 10; i++) {
             jedis.sadd(listKey1, String.valueOf(i));
             jedis.sadd(listKey2, String.valueOf(i * i));
         }
         print(20, jedis.smembers(listKey1));
         print(21, jedis.smembers(listKey2));
         print(22, jedis.sunion(listKey1, listKey2));
-        print(23,jedis.sdiff(listKey1,listKey2));
+        print(23, jedis.sdiff(listKey1, listKey2));
         print(24, jedis.sinter(listKey1, listKey2));
         print(25, jedis.sismember(listKey1, "16"));
         jedis.srem(listKey1, "5");
@@ -80,7 +92,8 @@ public class JedisAdapter {
         jedis.smove(listKey2, listKey1, "25");
         print(26, jedis.smembers(listKey1));
         print(26, jedis.smembers(listKey2));
-        print(27,jedis.scard(listKey1));
+        print(27, jedis.scard(listKey1));
+        print(27, jedis.scard(listKey1));
 
 
         String rankKey = "rankKey";
@@ -102,9 +115,9 @@ public class JedisAdapter {
         print(34, jedis.zscore(rankKey, "Luc"));
 
         print(35, jedis.zrange(rankKey, 0, 100));
-        print(36,jedis.zrange(rankKey,0,10));
-        print(36,jedis.zrange(rankKey,0,3));
-        print(36,jedis.zrevrange(rankKey,0,3));
+        print(36, jedis.zrange(rankKey, 0, 10));
+        print(36, jedis.zrange(rankKey, 0, 3));
+        print(36, jedis.zrevrange(rankKey, 0, 3));
 
         for (Tuple tuple : jedis.zrangeByScoreWithScores(rankKey, "60", "100")) {
             print(37, tuple.getElement() + ":" + String.valueOf(tuple.getScore()));
@@ -114,8 +127,8 @@ public class JedisAdapter {
         print(38, jedis.zrevrank(rankKey, "colin"));
 
 
-        String setKey = "zset";
-        jedis.zadd(setKey, 1, "a");
+        String setKey = "set";
+        jedis.zadd(setKey, 5, "gaa");
         jedis.zadd(setKey, 1, "b");
         jedis.zadd(setKey, 1, "c");
         jedis.zadd(setKey, 1, "d");
@@ -123,6 +136,93 @@ public class JedisAdapter {
 
         print(40, jedis.zlexcount(setKey, "-", "+"));
         print(41, jedis.zlexcount(setKey, "(b", "[d"));
-        print(41, jedis.zlexcount(setKey, "[b", "[d"));
+        print(42, jedis.zlexcount(setKey, "[b", "[d"));
+//        jedis.zrem(setKey, "b");
+        print(43, jedis.zrange(setKey, 0, 10));
+//        jedis.zremrangeByLex(setKey, "(c", "+");
+        print(44, jedis.zrange(setKey, 0, 2));
+
+        JedisPool pool = new JedisPool();
+        for (int i = 0; i < 100; i++) {
+            Jedis jedis1 = pool.getResource();
+            print(45, jedis1.get("pv"));
+            jedis1.close();
+        }
+
+        User user = new User();
+        user.setName("xx");
+        user.setPassword("ppp");
+        user.setHeadUrl("a.png");
+        user.setSalt("salt");
+//        user.setId(1);
+        jedis.set("user1", JSONObject.toJSONString(user));
+        String value = jedis.get("user1");
+        User user1 = JSONObject.parseObject(value, User.class);
+        System.out.println(user1.getSalt());
+    }
+
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        jedisPool = new JedisPool("redis://localhost:6379/10");
+
+    }
+
+    public long sadd(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.sadd(key, value);
+        } catch (Exception e) {
+            logger.error("发生异常");
+        }finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+    public long srem(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.srem(key, value);
+        } catch (Exception e) {
+            logger.error("发生异常");
+        }finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+    public long scard(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.scard(key);
+        } catch (Exception e) {
+            logger.error("发生异常");
+        }finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    public boolean sismember(String key,String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.sismember(key,value);
+        } catch (Exception e) {
+            logger.error("发生异常");
+        }finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return false;
     }
 }

@@ -2,6 +2,7 @@ package cn.colining.controller;
 
 import cn.colining.model.*;
 import cn.colining.service.CommentService;
+import cn.colining.service.LikeService;
 import cn.colining.service.QuestionService;
 import cn.colining.service.UserService;
 import cn.colining.util.WendaUtil;
@@ -35,6 +36,8 @@ public class QuestionController {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    LikeService likeService;
 
     /**
      * 增加题目的函数；
@@ -87,6 +90,12 @@ public class QuestionController {
         for (Comment comment : commentsList) {
             ViewObject vo = new ViewObject();
             vo.set("comment", comment);
+            if (hostHolder.getUser() == null) {
+                vo.set("liked", 0);
+            }else {
+                vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, comment.getId()));
+            }
+            vo.set("likeCount",likeService.getLikeCount(EntityType.ENTITY_COMMENT,comment.getId()));
             vo.set("user", userService.getUser(comment.getUserId()));
             comments.add(vo);
         }
