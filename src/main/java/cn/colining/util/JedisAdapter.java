@@ -1,6 +1,5 @@
 package cn.colining.util;
 
-import cn.colining.controller.MessageController;
 import cn.colining.model.User;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
@@ -11,6 +10,8 @@ import redis.clients.jedis.BinaryClient;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Tuple;
+
+import java.util.List;
 
 /**
  * Created by colin on 2017/7/27.
@@ -25,6 +26,7 @@ public class JedisAdapter implements InitializingBean {
     }
 
     public static void main(String[] args) {
+        
         Jedis jedis = new Jedis();
         jedis.flushDB();
         jedis.set("hello", "world");
@@ -168,6 +170,12 @@ public class JedisAdapter implements InitializingBean {
 
     }
 
+    /**
+     * 向redis中添加键值对
+     * @param key
+     * @param value
+     * @return
+     */
     public long sadd(String key, String value) {
         Jedis jedis = null;
         try {
@@ -182,6 +190,7 @@ public class JedisAdapter implements InitializingBean {
         }
         return 0;
     }
+
     public long srem(String key, String value) {
         Jedis jedis = null;
         try {
@@ -224,5 +233,35 @@ public class JedisAdapter implements InitializingBean {
             }
         }
         return false;
+    }
+
+    public List<String> brpop(int timeout, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.brpop(timeout, key);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
+    public long lpush(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.lpush(key, value);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
     }
 }

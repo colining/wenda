@@ -76,6 +76,8 @@ public class QuestionController {
      * 问题详情页
      * 新添加了评论的部分
      * 取出评论集合然后通过viewObject 放进页面中区
+     * 增加了传递赞和踩的信息；
+     * 并且传递了赞的数量
      * @param model model
      * @param qid   问题id，用来取出问题
      * @return

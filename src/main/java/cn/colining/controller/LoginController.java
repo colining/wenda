@@ -1,5 +1,8 @@
 package cn.colining.controller;
 
+import cn.colining.async.EventModel;
+import cn.colining.async.EventProducer;
+import cn.colining.async.EventType;
 import cn.colining.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,6 +30,9 @@ public class LoginController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EventProducer eventProducer;
 
     /**
      * regLogin 注册和登陆的处理；默认会跳转到登录页面
@@ -64,7 +70,7 @@ public class LoginController {
                       @RequestParam(value = "rememberme", defaultValue = "false") boolean rememberme,
                       HttpServletResponse response) {
         try {
-            Map<String, String> map = userService.register(username, password);
+            Map<String, Object> map = userService.register(username, password);
             return checkTicket(model, next, rememberme, response, map);
 
         } catch (Exception e) {
@@ -94,7 +100,10 @@ public class LoginController {
                         @RequestParam(value = "next", defaultValue = "") String next,
                         HttpServletResponse response) {
         try {
-            Map<String, String> map = userService.login(username, password);
+            Map<String, Object> map = userService.login(username, password);
+            eventProducer.fireEvent(new EventModel(EventType.LOGIN)
+                    .setExt("username", username).setExt("email", "746203216@qq.com")
+                    .setActorId((int)map.get("userId")));
             return checkTicket(model, next, rememberMe, response, map);
         } catch (Exception e) {
             logger.error("注册异常" + e.getMessage());
@@ -128,14 +137,16 @@ public class LoginController {
      * @param map
      * @return
      */
-    private String checkTicket(Model model, @RequestParam(value = "next", defaultValue = "") String next, @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe, HttpServletResponse response, Map<String, String> map) {
+    private String checkTicket(Model model, @RequestParam(value = "next", defaultValue = "") String next, @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe, HttpServletResponse response, Map<String, Object> map) {
         if (map.containsKey("ticket")) {
-            Cookie cookie = new Cookie("ticket", map.get("ticket"));
+            Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
             cookie.setPath("/");
             if (rememberMe) {
                 cookie.setMaxAge(3600 * 24 * 5);
             }
+
             response.addCookie(cookie);
+
             if (StringUtils.isNotBlank(next)) {
                 return "redirect:" + next;
             }

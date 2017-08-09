@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 /**
  * Created by colin on 2017/7/28.
  */
+
 @Service
 public class LikeService {
     @Autowired
