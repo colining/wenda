@@ -27,6 +27,11 @@ public class LikeHandler implements EventHandler{
     @Autowired
     UserService userService;
 
+    /**
+     * handler是实际上做事的部分，生产者把事件通过消息队列传递过来；
+     * 然后消费者获取队列，分发给handler；
+     * @param eventModel
+     */
     @Override
     public void doHandle(EventModel eventModel) {
         Message message = new Message();
@@ -36,7 +41,6 @@ public class LikeHandler implements EventHandler{
         User user = userService.getUser(eventModel.getActorId());
         message.setContent("用户" + user.getName() + "赞了你的评论,https://127.0.0.1:8080/question/" + eventModel.getExt("questionId"));
         messageService.addMessage(message);
-
     }
 
     @Override

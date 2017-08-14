@@ -32,6 +32,8 @@ public class EventConsumer  implements InitializingBean,ApplicationContextAware{
 
     @Autowired
     JedisAdapter jedisAdapter;
+
+
     @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
@@ -49,24 +51,24 @@ public class EventConsumer  implements InitializingBean,ApplicationContextAware{
                 }
             }
         }
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    String key = RedisKeyUtil.getEventQueueKey();
-                    List<String> events = jedisAdapter.brpop(0, key);
-                    for (String message : events) {
-                        if (message.equals(key)) {
-                            continue;
-                        }
-                        EventModel eventModel = JSON.parseObject(message, EventModel.class);
-                        if (!config.containsKey(eventModel.getType())) {
-                            logger.error("非法事件");
-                            continue;
-                        }
-                        for (EventHandler eventHandler : config.get(eventModel.getType())) {
-                            eventHandler.doHandle(eventModel);
-                        }
+        //新建一个线程，简单来说，就是一直循环，有事件过来就消费；
+        Thread thread = new Thread(() -> {
+            while (true) {
+                String key = RedisKeyUtil.getEventQueueKey();
+                List<String> events = jedisAdapter.brpop(0, key);
+                for (String message : events) {
+                    if (message.equals(key)) {
+                        continue;
+                    }
+                    // 还原event
+                    EventModel eventModel = JSON.parseObject(message, EventModel.class);
+                    if (!config.containsKey(eventModel.getType())) {
+                        logger.error("非法事件");
+                        continue;
+                    }
+                    //  对于该event所对应的所有handler，让handler进行处理
+                    for (EventHandler eventHandler : config.get(eventModel.getType())) {
+                        eventHandler.doHandle(eventModel);
                     }
                 }
             }

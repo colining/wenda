@@ -19,6 +19,7 @@ import java.util.Map;
 public class LoginExceptionHandler implements EventHandler {
     @Autowired
     MailSender mailSender;
+
     @Override
     public void doHandle(EventModel eventModel) {
         Map<String, Object> map = new HashMap<>();

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by nowcoder on 2016/7/15. // course@nowcoder.com NKnk66
+ * Created by colin
  */
 @Service
 public class MailSender implements InitializingBean {
@@ -55,8 +55,8 @@ public class MailSender implements InitializingBean {
         mailSender.setUsername("test");
         mailSender.setPassword("86271325");
         mailSender.setHost("colining.club");
-        mailSender.setPort(25);
-        mailSender.setProtocol("smtp");
+        mailSender.setPort(465);
+        mailSender.setProtocol("smtps");
         mailSender.setDefaultEncoding("utf8");
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.ssl.enable", true);

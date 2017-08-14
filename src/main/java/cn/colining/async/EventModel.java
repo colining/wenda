@@ -6,6 +6,8 @@ import java.util.HashMap;
  * Created by colin on 2017/8/9.
  */
 public class EventModel {
+    //除了基本的类型以外，最重要的是事件模型加了一个hashmap，就像viewobject一样，
+    //随便存约定好内容即可
     private EventType type;
     private int actorId;
     private int entityType;
