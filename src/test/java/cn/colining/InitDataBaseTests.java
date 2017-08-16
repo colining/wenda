@@ -2,8 +2,10 @@ package cn.colining;
 
 import cn.colining.dao.QuestionDAO;
 import cn.colining.dao.UserDAO;
+import cn.colining.model.EntityType;
 import cn.colining.model.Question;
 import cn.colining.model.User;
+import cn.colining.service.FollowService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +29,9 @@ public class InitDataBaseTests {
     @Autowired
     QuestionDAO questionDAO;
 
+    @Autowired
+    FollowService followService;
+
     @Test
     public void initDatabase() {
         Random random = new Random();
@@ -39,6 +44,11 @@ public class InitDataBaseTests {
             userDAO.addUser(user);
             user.setPassword("hello");
             userDAO.updatePassword(user);
+            for (int j = 0; j < i; j++) {
+                followService.follow(j, EntityType.ENTITY_USER,i);
+            }
+
+
 
             Question question = new Question();
             question.setCommentCount(i);

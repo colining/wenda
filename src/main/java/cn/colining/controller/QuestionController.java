@@ -1,10 +1,7 @@
 package cn.colining.controller;
 
 import cn.colining.model.*;
-import cn.colining.service.CommentService;
-import cn.colining.service.LikeService;
-import cn.colining.service.QuestionService;
-import cn.colining.service.UserService;
+import cn.colining.service.*;
 import cn.colining.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +35,9 @@ public class QuestionController {
 
     @Autowired
     LikeService likeService;
+
+    @Autowired
+    FollowService followService;
 
     /**
      * 增加题目的函数；
@@ -102,6 +102,26 @@ public class QuestionController {
             comments.add(vo);
         }
         model.addAttribute("comments", comments);
+        List<ViewObject> followUsers = new ArrayList<ViewObject>();
+        // 获取关注的用户信息
+        List<Integer> users = followService.getFollowers(EntityType.ENTITY_QUESTION, qid, 20);
+        for (Integer userId : users) {
+            ViewObject vo = new ViewObject();
+            User u = userService.getUser(userId);
+            if (u == null) {
+                continue;
+            }
+            vo.set("name", u.getName());
+            vo.set("headUrl", u.getHeadUrl());
+            vo.set("id", u.getId());
+            followUsers.add(vo);
+        }
+        model.addAttribute("followUsers", followUsers);
+        if (hostHolder.getUser() != null) {
+            model.addAttribute("followed", followService.isFollower(hostHolder.getUser().getId(), EntityType.ENTITY_QUESTION, qid));
+        } else {
+            model.addAttribute("followed", false);
+        }
         return "detail";
     }
 }

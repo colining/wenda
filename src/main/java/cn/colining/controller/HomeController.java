@@ -1,8 +1,8 @@
 package cn.colining.controller;
 
-import cn.colining.model.HostHolder;
-import cn.colining.model.Question;
-import cn.colining.model.ViewObject;
+import cn.colining.model.*;
+import cn.colining.service.CommentService;
+import cn.colining.service.FollowService;
 import cn.colining.service.QuestionService;
 import cn.colining.service.UserService;
 import org.slf4j.Logger;
@@ -32,6 +32,12 @@ public class HomeController {
     @Autowired
     HostHolder hostHolder;
 
+    @Autowired
+    FollowService followService;
+
+    @Autowired
+    CommentService commentService;
+
     /**
      * 通过model 将vos 传递给页面，进行首页展示
      *
@@ -42,8 +48,25 @@ public class HomeController {
     public String index(Model model) {
         List<ViewObject> vos = getViewObjects(0, 0, 10);
         model.addAttribute("vos", vos);
-        hostHolder.getUser();
         return "index";
+    }
+    @RequestMapping(path = {"/user/{userId}"}, method = {RequestMethod.GET})
+    public String userIndex(Model model, @PathVariable("userId") int userId) {
+        List<ViewObject> vos = getViewObjects(userId, 0, 10);
+        model.addAttribute("vos", vos);
+        User user = userService.getUser(userId);
+        ViewObject vo = new ViewObject();
+        vo.set("user", user);
+        vo.set("commentCount", commentService.getUserCommentCount(userId));
+        vo.set("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, userId));
+        vo.set("followeeCount", followService.getFolloweeCount(userId, EntityType.ENTITY_USER));
+        if (hostHolder.getUser() != null) {
+            vo.set("followed", followService.isFollower(hostHolder.getUser().getId(), EntityType.ENTITY_USER, userId));
+        } else {
+            vo.set("followed", false);
+        }
+        model.addAttribute("profileUser", vo);
+        return "profile";
     }
 
     private List<ViewObject> getViewObjects(int userId, int offset, int limit) {
@@ -52,17 +75,12 @@ public class HomeController {
         for (Question question : questionList) {
             ViewObject vo = new ViewObject();
             vo.set("question", question);
+            vo.set("followCount", followService.getFollowerCount(EntityType.ENTITY_QUESTION, question.getId()));
             vo.set("user", userService.getUser(question.getUserId()));
             vos.add(vo);
         }
         return vos;
     }
 
-    @RequestMapping(path = {"/user/{userId}"}, method = {RequestMethod.GET})
-    public String userIndex(Model model, @PathVariable("userId") int userId) {
-        List<ViewObject> vos = getViewObjects(userId, 0, 10);
-        model.addAttribute("vos", vos);
-        return "index";
-    }
 
 }

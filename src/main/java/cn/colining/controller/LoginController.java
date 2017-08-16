@@ -38,7 +38,7 @@ public class LoginController {
      * regLogin 注册和登陆的处理；默认会跳转到登录页面
      * 该页面可以登陆也可以注册
      *
-     * @param model 通过model传递到view，view再通过input传递next值
+     * @param model 通过model传递到view，view再通过input传递next
      * @param next  指之前浏览的页面，登陆注册完就可以跳转过去
      * @return
      */
