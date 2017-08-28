@@ -39,7 +39,7 @@ public class QuestionService {
         return questionDAO.selectLatestQuestions(userId, offset, limit);
     }
 
-    public Question selectById(int i) {
+    public Question getById(int i) {
         return questionDAO.selectById(i);
     }
 

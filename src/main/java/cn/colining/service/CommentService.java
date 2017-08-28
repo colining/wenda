@@ -1,6 +1,7 @@
 package cn.colining.service;
 
 import cn.colining.dao.CommentDAO;
+import cn.colining.dao.FeedDAO;
 import cn.colining.model.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class CommentService {
     CommentDAO commentDAO;
     @Autowired
     SensitiveService sensitiveService;
+
 
     public List<Comment> getCommentByEntity(int entityId, int entityType) {
         return commentDAO.selectByEntity(entityId, entityType);

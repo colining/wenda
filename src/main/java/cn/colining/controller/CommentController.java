@@ -1,5 +1,8 @@
 package cn.colining.controller;
 
+import cn.colining.async.EventModel;
+import cn.colining.async.EventProducer;
+import cn.colining.async.EventType;
 import cn.colining.model.Comment;
 import cn.colining.model.EntityType;
 import cn.colining.model.HostHolder;
@@ -41,6 +44,8 @@ public class CommentController {
     @Autowired
     SensitiveService sensitiveService;
 
+    @Autowired
+    EventProducer eventProducer;
 
 
     @RequestMapping(path = {"/addComment"}, method = {RequestMethod.POST})
@@ -66,6 +71,9 @@ public class CommentController {
 
             int count = commentService.getCommentCount(comment.getEntityId(), comment.getEntityType());
             questionService.updateCommentCount(comment.getEntityId(), count);
+
+            eventProducer.fireEvent(new EventModel(EventType.COMMENT).setActorId(comment.getUserId())
+                    .setEntityId(questionId));
         } catch (Exception e) {
             logger.error("增加评论失败" + e.getMessage());
         }

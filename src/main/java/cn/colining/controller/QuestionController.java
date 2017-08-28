@@ -84,7 +84,7 @@ public class QuestionController {
      */
     @RequestMapping(value = "/question/{qid}")
     public String questionDetail(Model model,@PathVariable("qid") int qid) {
-        Question question = questionService.selectById(qid);
+        Question question = questionService.getById(qid);
         model.addAttribute("question", question);
 //        model.addAttribute("user", userService.getUser(hostHolder.getUser().getId()));
         List<Comment> commentsList = commentService.getCommentByEntity(qid, EntityType.ENTITY_QUESTION);

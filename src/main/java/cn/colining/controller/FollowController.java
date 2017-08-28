@@ -6,8 +6,6 @@ import cn.colining.async.EventType;
 import cn.colining.model.*;
 import cn.colining.service.*;
 import cn.colining.util.WendaUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +38,9 @@ public class FollowController {
 
     @Autowired
     EventProducer eventProducer;
+
+    @Autowired
+    FeedService feedService;
 
     @RequestMapping(path = {"/followUser"}, method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
@@ -82,7 +83,7 @@ public class FollowController {
             return WendaUtil.getJSONString(999);
         }
 
-        Question q = questionService.selectById(questionId);
+        Question q = questionService.getById(questionId);
         if (q == null) {
             return WendaUtil.getJSONString(1, "问题不存在");
         }
@@ -108,7 +109,7 @@ public class FollowController {
             return WendaUtil.getJSONString(999);
         }
 
-        Question q = questionService.selectById(questionId);
+        Question q = questionService.getById(questionId);
         if (q == null) {
             return WendaUtil.getJSONString(1, "问题不存在");
         }
@@ -173,6 +174,7 @@ public class FollowController {
         }
         return userInfos;
     }
+
 }
 
 

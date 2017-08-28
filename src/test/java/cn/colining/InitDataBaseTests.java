@@ -65,10 +65,10 @@ public class InitDataBaseTests {
 
     @Test
     public void test2() {
-//		Assert.assertEquals("hello", userDAO.selectById(1).getPassword());
+//		Assert.assertEquals("hello", userDAO.getById(1).getPassword());
 //		userDAO.deleteById(1);
-//        Assert.assertNull(userDAO.selectById(1));
-//        Assert.assertNotNull(userDAO.selectById(1));
+//        Assert.assertNull(userDAO.getById(1));
+//        Assert.assertNotNull(userDAO.getById(1));
         System.out.println(questionDAO.selectLatestQuestions(0, 0, 10));
     }
 
