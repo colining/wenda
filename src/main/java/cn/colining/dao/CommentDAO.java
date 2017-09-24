@@ -59,6 +59,7 @@ public interface CommentDAO {
 
     @Select({"select count(id) from ", TABLE_NAME, " where user_id=#{userId}"})
     int getUserCommentCount(int userId);
+
 }
 
 

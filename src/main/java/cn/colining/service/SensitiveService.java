@@ -150,7 +150,7 @@ public class SensitiveService implements InitializingBean {
     }
 
 
-    public static void main(String[] args) {
+    public static void mainx(String[] args) {
         SensitiveService s = new SensitiveService();
         s.addWord("色情");
         s.addWord("赌博");

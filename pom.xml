@@ -6,7 +6,7 @@
 	<groupId>cn.colining</groupId>
 	<artifactId>wenda</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>wenda</name>
 	<description>wenda project</description>
@@ -79,6 +79,11 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>6.6.1</version>
 		</dependency>
 	</dependencies>
 

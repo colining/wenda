@@ -1,6 +1,5 @@
 package cn.colining.async;
 
-import cn.colining.controller.CommentController;
 import cn.colining.util.JedisAdapter;
 import cn.colining.util.RedisKeyUtil;
 import com.alibaba.fastjson.JSON;
@@ -56,19 +55,21 @@ public class EventConsumer  implements InitializingBean,ApplicationContextAware{
             while (true) {
                 String key = RedisKeyUtil.getEventQueueKey();
                 List<String> events = jedisAdapter.brpop(0, key);
-                for (String message : events) {
-                    if (message.equals(key)) {
-                        continue;
-                    }
-                    // 还原event
-                    EventModel eventModel = JSON.parseObject(message, EventModel.class);
-                    if (!config.containsKey(eventModel.getType())) {
-                        logger.error("非法事件");
-                        continue;
-                    }
-                    //  对于该event所对应的所有handler，让handler进行处理
-                    for (EventHandler eventHandler : config.get(eventModel.getType())) {
-                        eventHandler.doHandle(eventModel);
+                if (events != null) {
+                    for (String message : events) {
+                        if (message.equals(key)) {
+                            continue;
+                        }
+                        // 还原event
+                        EventModel eventModel = JSON.parseObject(message, EventModel.class);
+                        if (!config.containsKey(eventModel.getType())) {
+                            logger.error("非法事件");
+                            continue;
+                        }
+                        //  对于该event所对应的所有handler，让handler进行处理
+                        for (EventHandler eventHandler : config.get(eventModel.getType())) {
+                            eventHandler.doHandle(eventModel);
+                        }
                     }
                 }
             }

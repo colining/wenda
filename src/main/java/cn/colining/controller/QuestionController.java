@@ -1,5 +1,8 @@
 package cn.colining.controller;
 
+import cn.colining.async.EventModel;
+import cn.colining.async.EventProducer;
+import cn.colining.async.EventType;
 import cn.colining.model.*;
 import cn.colining.service.*;
 import cn.colining.util.WendaUtil;
@@ -39,6 +42,9 @@ public class QuestionController {
     @Autowired
     FollowService followService;
 
+    @Autowired
+    EventProducer eventProducer;
+
     /**
      * 增加题目的函数；
      * 如果没登录就会加一个匿名，也可以返回code:999
@@ -63,6 +69,9 @@ public class QuestionController {
                 question.setUserId(hostHolder.getUser().getId());
             }
             if (questionService.addQuestion(question) > 0) {
+                eventProducer.fireEvent(new EventModel(EventType.ADD_QUESTION)
+                        .setActorId(question.getUserId()).setEntityId(question.getId())
+                        .setExt("title", question.getTitle()).setExt("content", question.getContent()));
                 return WendaUtil.getJSONString(0);
             }
 
